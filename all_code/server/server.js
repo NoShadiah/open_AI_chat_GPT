@@ -46,7 +46,7 @@ app.post('/', async (req, res)=>{   //For posting data from the frontend
         })
     }catch(error){
         console.log(error);
-        res.status(500).send({error})
+        res.status(500).send({error});
     }
 })
 
