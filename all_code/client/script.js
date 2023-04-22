@@ -106,6 +106,33 @@ const handleSubmit=async(e)=>{
     const messageDiv = document.getElementById(uniqueId);
     Loader(messageDiv);
 
+    // Fetching the data from the server ie the bot's response by creating a new response
+    const response = await fetch('http://localhost:5000',{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        prompt:data.get('prompt')
+      })
+    })
+
+    // After getting the response, we need to empty the message div and also clear the interval so as to be able to load a new response
+    clearInterval(loadInterval);
+    messageDiv = ' ';
+
+    // To get the xact message from the server
+    if(response.ok){
+      const data = await response.json();
+      const parsedData = data.bot.trim();  //To parse the data
+      
+      // invoking the typeText function with the messageDiv and the parsed data as arguments
+      typeText(messageDiv, parsedData);
+    }else{
+      const err = response.text();
+      messageDiv.innerHTML = "Something went wrong";
+      alert(err);
+    }
 }
 
 // To view the changes made to the handleSubmit function, add an eventListener to the form

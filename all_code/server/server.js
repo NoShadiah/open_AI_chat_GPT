@@ -35,7 +35,20 @@ app.post('/', async (req, res)=>{   //For posting data from the frontend
             "model":"text-davinci-003",
             "prompt":`${prompt}`,
             "temperature": 0,
-            
+            "max_tokens":3000,
+            "top_p":1,
+            "frequency_penalty":0.5,
+            "presence_penalty":0
         })
+        //After getting hte response from the api, it is to be sent  bakc to the frontend
+        res.status(200).send({
+            bot:response.data.choices[0].text
+        })
+    }catch(error){
+        console.log(error);
+        res.status(500).send({error})
     }
 })
+
+// To enable the server to always listen to new requests
+app.listen(5000, ()=>console.log("My bot is running on port 5000: http://localhost:5000"))
