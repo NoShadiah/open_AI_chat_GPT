@@ -3,7 +3,7 @@ import user from "/user.svg";
 
 // accessing the chat_container and the form
 const form = document.querySelector('form')
-const chatContainer = document.querySelector('chat_container')
+const chatContainer = document.querySelector('#chat_container')
 
 // This variable is to be used later to set the loading interval of the bot when fetching the response
 let loadInterval;
@@ -113,7 +113,7 @@ form.addEventListener('submit', handleSubmit);
 
 // enable submission of the form using th eenter key on the keyboard
 form.addEventListener('keyup', (e)=>{
-  if (e.keyCode ===13){
+  if (e.keyCode === 13){
     handleSubmit(e);
   }
-})
+}) 
