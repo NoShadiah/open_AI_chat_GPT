@@ -60,6 +60,7 @@ function chatStripe(isAi, value, uniqueId){
   console.log(ClasName);
   return(
     // Using a template string since we need spaces in the content
+    // The message div renders the response generated bby the AI
     `
     <div class="wrapper ${isAi && 'ai'}">
       <div class="chat">
@@ -68,9 +69,51 @@ function chatStripe(isAi, value, uniqueId){
             src=${isAi? bot : user}
             alt=${isAi? 'bot': 'user'}/>
         </div>
+        
+        <div class="message" id=${uniqueId}>
+            ${value}
+        </div>
       </div>
     </div>
 
     `
   )
 }
+
+const handleSubmit=async(e)=>{
+    // to prevent the default behaviour of a browser (reloading when a form is submitted)
+    e.preventDefault();
+    
+    // to catch the data input by the user
+    const data = new FormData(form);
+
+    // creating a user's chat stripe after the form has been submitted
+    chatContainer.innerHTML += chatStripe(false, data.get('prompt'));
+    // the prompt is the name of the textarea which is the form
+    // after this, the form is reset to its intial state, empty
+    form.reset();
+
+    // Then a chat stripe for the bot is created by generating a unique ID for the message using the function generated above
+    const uniqueId = generateUniqueId();
+
+    // the initial value in the message div of the bot's chat stripe is an empty string relating to the loader function above
+    chatContainer.innerHTML += chatStripe(true, " ", uniqueId);
+
+    // enable a user to csee every new mesage brought by the bot, enable it to keep scrolling down
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // fetch the newly created div, ie the chat container and invoke the loader to see the div
+    const messageDiv = document.getElementById(uniqueId);
+    Loader(messageDiv);
+
+}
+
+// To view the changes made to the handleSubmit function, add an eventListener to the form
+form.addEventListener('submit', handleSubmit);
+
+// enable submission of the form using th eenter key on the keyboard
+form.addEventListener('keyup', (e)=>{
+  if (e.keyCode ===13){
+    handleSubmit(e);
+  }
+})
